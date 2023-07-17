@@ -16,8 +16,14 @@ usage <- usage_raw %>%
          Day = wday(Date, label = TRUE),
          Week = week(Date),
          Month = month(Date, label = TRUE)) %>% # Extracting Day & Weeks & Months
-  select(Date, Day, Week, Month, everything(), -X) # Removing redundant last column
+  select(Date, Day, Week, Month, everything(), -c(MPRN, Meter.Serial.Number))
 
+# Pivoting to long format
+usage <- usage %>%
+  tidyr::pivot_longer(cols = !c(Date:Month),
+                      names_to = "Time",
+                      values_to = "Usage")
+  
 # Exporting --------------------------------------------------------------------
 export_path <- "./01__Data/02__Processed_Data/"
 
