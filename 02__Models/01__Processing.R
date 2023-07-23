@@ -23,7 +23,18 @@ usage <- usage %>%
   tidyr::pivot_longer(cols = !c(Date:Month),
                       names_to = "Time",
                       values_to = "Usage")
-  
+
+# Creating timestamp
+usage <- usage %>%
+  mutate(Timestamp = paste(Date, Time, sep = " "),
+         Timestamp = gsub("\\.", ":", Timestamp),
+         Timestamp = as.POSIXct(Timestamp, format = "%Y-%m-%d %H:%M")) %>%
+  select(Timestamp, everything(), -Date)
+
+# Converting Kwh to W
+usage <- usage %>%
+  mutate(Usage = Usage * 1000)
+
 # Exporting --------------------------------------------------------------------
 export_path <- "./01__Data/02__Processed_Data/"
 
