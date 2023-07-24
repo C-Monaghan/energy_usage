@@ -32,15 +32,24 @@ mean_usage <- aggregate(Usage ~ Day + Month, data = usage, FUN = mean)
 mean_daily <- ggplot(data = mean_usage, aes(x = Day, y = Usage, fill = Month)) +
   geom_bar(stat = "identity") +
   facet_wrap(~ Month) +
-  labs(title ="Mean Daily usage (by month)", y = "Usage (Watts)") +
+  labs(title ="Mean Daily Usage (by Month)", y = "Usage (Watts)") +
   theme_bw() +
   theme(legend.position = "none",
         plot.title = element_text(hjust = 0.5))
 
+mean_monthly <- ggplot(data = mean_usage, aes(x = Month, y = Usage, fill = Day)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ Day) +
+  labs(title ="Mean Monthly Usage (by Day)", y = "Usage (Watts)") +
+  theme_bw() +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5))
 # Exporting --------------------------------------------------------------------
 export_path <- "./02__Models/results"
 
 cowplot::save_plot(file.path(export_path, "01__overall_usage.png"), plot = overall_usage,
                    base_height = 10)
 cowplot::save_plot(file.path(export_path, "02__mean_daily_usage.png"), plot = mean_daily,
+                   base_height = 10)
+cowplot::save_plot(file.path(export_path, "03__mean_monthly_usage.png"), plot = mean_monthly,
                    base_height = 10)
